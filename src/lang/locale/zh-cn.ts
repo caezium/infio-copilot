@@ -12,7 +12,9 @@ export default {
 			customMode: "自定义模式",
 			customModeDesc: "定义具有特定行为的个性化 AI 模式",
 			mcp: "MCP",
-			mcpDesc: "管理模型上下文协议集成"
+			mcpDesc: "管理模型上下文协议集成",
+			rag: "语义搜索",
+			ragDesc: "使用 RAG 在笔记库中进行语义搜索",
 		},
 		errors: {
 			failedToLoadConversation: "加载对话失败",
@@ -48,7 +50,17 @@ export default {
 			save: "保存",
 			cancel: "取消",
 			yesterday: "昨天",
-			daysAgo: "天前"
+			daysAgo: "天前",
+			multiSelect: "多选",
+			cancelMultiSelect: "取消",
+			selectMode: "选择模式 - 已选择 {count} 个对话",
+			selectAll: "全选",
+			unselectAll: "取消全选",
+			batchDelete: "批量删除 ({count})",
+			confirmBatchDelete: "确定要删除选中的 {count} 个对话吗？此操作不可撤销。",
+			batchDeleteSuccess: "成功删除 {count} 个对话",
+			batchDeleteFail: "{count} 个对话删除失败",
+			pleaseSelectFirst: "请先选择要删除的对话",
 		},
 		shortcutInfo: {
 			editInline: "行内编辑",
@@ -127,7 +139,14 @@ export default {
 			image: "图片",
 			createCommand: "创建命令",
 			uploadNewImage: "上传新图片"
-		}
+		},
+		searchView: {
+			placeholder: "语义搜索（按回车键搜索）...",
+			stats: "{fileCount} 个文件，{blockCount} 个块",
+			loading: "正在搜索...",
+			noResults: "未找到相关结果",
+			searchButton: "搜索",
+		},
 	},
 	inlineEdit: {
 		placeholder: "输入指令，Enter 提交，Esc 关闭",
@@ -241,7 +260,7 @@ export default {
 			embeddingModel: '嵌入模型：',
 			embeddingModelDescription: '用于文档向量化和语义搜索的模型，支持 RAG 功能',
 		},
-		
+
 		// 模型提供商设置
 		ModelProvider: {
 			noApiKeySet: '当前未设置任何 API Key',
@@ -284,7 +303,7 @@ export default {
 				test: '测试',
 			},
 		},
-		
+
 		// 模型参数部分
 		ModelParameters: {
 			title: '模型参数',
@@ -299,7 +318,7 @@ export default {
 			maxTokens: 'maxTokens',
 			maxTokensDescription: '此参数更改模型允许生成的最大 Tokens 数。默认值：4096',
 		},
-		
+
 		// 文件搜索部分
 		FilesSearch: {
 			title: '文件搜索',
@@ -319,7 +338,7 @@ export default {
 			ripgrepPath: 'ripgrep 路径',
 			ripgrepPathDescription: 'ripgrep 二进制文件的路径。使用 ripgrep 正则搜索时需要此项。',
 		},
-		
+
 		// 聊天行为部分
 		ChatBehavior: {
 			title: '聊天行为',
@@ -329,7 +348,7 @@ export default {
 			currentFile: '当前文件',
 			vault: '整个 Vault',
 		},
-		
+
 		// 网页搜索部分
 		WebSearch: {
 			title: '网页搜索',
@@ -343,7 +362,7 @@ export default {
 			jinaApiKey: 'Jina API 密钥（可选）',
 			jinaApiKeyDescription: '用于将网页解析为 Markdown 格式的 API 密钥。如果未提供，将使用本地解析。请从此处获取您的密钥',
 		},
-		
+
 		// RAG 部分
 		RAG: {
 			title: 'RAG(高级)',
@@ -365,8 +384,15 @@ export default {
 			noMatchingFiles: '没有文件匹配包含模式',
 			excludedFiles: '排除的文件',
 			noExcludedFiles: '没有文件匹配排除模式',
+			indexStatus: "索引状态",
+			indexedFiles: "已索引文件数：{count}",
+			rebuildIndex: "重建索引",
+			updateIndex: "更新索引",
+			indexing: "正在索引...",
+			indexed: "索引已是最新。",
+			indexError: "索引失败：{error}",
 		},
-		
+
 		// 自动完成部分
 		AutoComplete: {
 			// 基本自动完成设置
@@ -377,7 +403,7 @@ export default {
 			cacheCompletionsDescription: '如果禁用，插件将不会缓存补全。接受或拒绝补全后，插件将不会记住它。这可能会导致更多的 API 调用。',
 			debugMode: '调试模式',
 			debugModeDescription: '如果启用，各种调试消息将被记录到控制台，例如来自 API 的完整响应，包括思维链 Tokens。',
-			
+
 			// 预处理设置
 			preprocessing: {
 				title: '预处理',
@@ -389,7 +415,7 @@ export default {
 				maxSuffixLengthDescription: '将包含在后缀中的最大字符数。较大的值将增加补全的上下文，但也可能增加成本或超出 Tokens 限制。',
 				chars: '字符',
 			},
-			
+
 			// 后处理设置
 			postprocessing: {
 				title: '后处理',
@@ -398,7 +424,7 @@ export default {
 				removeCodeBlockIndicators: '自动删除重复的代码块指示符',
 				removeCodeBlockIndicatorsDescription: 'AI 模型可能会急切地添加代码块指示符 (`)，即使光标已在代码块内。如果启用此设置，插件将自动从补全中删除这些重复的指示符。',
 			},
-			
+
 			// 触发设置
 			trigger: {
 				title: '触发',
@@ -408,7 +434,7 @@ export default {
 				words: '触发词',
 				wordsDescription: '如果之前的文本匹配任何这些单词或字符，将触发补全。这可以是直接字符串匹配或正则表达式匹配。使用正则表达式时，请确保包含行尾字符 ($)。',
 			},
-			
+
 			// 隐私设置
 			privacy: {
 				title: '隐私',
@@ -423,7 +449,7 @@ export default {
 				ignoredTagsDescription: '包含任何这些标签的文件将被忽略。当您打开包含此处列出的标签的文件时，插件将自动禁用自身并在底部菜单中显示"已禁用"状态。每行输入一个标签。',
 				ignoredTagsPlaceholder: '您的文件标签，例如 secret',
 			},
-			
+
 			// 危险区域设置
 			dangerZone: {
 				title: '危险区域',
@@ -434,7 +460,7 @@ export default {
 				advancedModeDescription: '如果您熟悉提示工程，可以启用此设置以查看提示生成和 few shot 示例设置。关闭此按钮。它不会重置您的更改；请使用恢复出厂设置按钮。',
 				resetComplete: '恢复出厂设置完成。',
 			},
-			
+
 			// 高级设置
 			advanced: {
 				title: '高级',

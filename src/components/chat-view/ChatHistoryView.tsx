@@ -82,7 +82,7 @@ const ChatHistoryView = ({
 	}
 
 	// check if all conversations are selected
-	const isAllSelected = filteredConversations.length > 0 && 
+	const isAllSelected = filteredConversations.length > 0 &&
 		filteredConversations.every(conv => selectedConversations.has(conv.id))
 
 	// delete conversation
@@ -99,12 +99,12 @@ const ChatHistoryView = ({
 	// batch delete selected conversations
 	const handleBatchDelete = async () => {
 		if (selectedConversations.size === 0) {
-			new Notice('请先选择要删除的对话')
+			new Notice(t('chat.history.pleaseSelectFirst'))
 			return
 		}
 
 		// show confirmation
-		const confirmed = confirm(`确定要删除选中的 ${selectedConversations.size} 个对话吗？此操作不可撤销。`)
+		const confirmed = confirm(t('chat.history.confirmBatchDelete', { count: selectedConversations.size }))
 		if (!confirmed) {
 			return
 		}
@@ -126,10 +126,10 @@ const ChatHistoryView = ({
 
 		// show results
 		if (deletedIds.length > 0) {
-			new Notice(`成功删除 ${deletedIds.length} 个对话`)
+			new Notice(t('chat.history.batchDeleteSuccess', { count: deletedIds.length }))
 		}
 		if (errors.length > 0) {
-			new Notice(`${errors.length} 个对话删除失败`)
+			new Notice(t('chat.history.batchDeleteFail', { count: errors.length }))
 		}
 
 		// clear selections
@@ -148,7 +148,7 @@ const ChatHistoryView = ({
 			new Notice(String(t('chat.errors.titleRequired')))
 			return
 		}
-		
+
 		try {
 			await updateConversationTitle(id, titleInput.value.trim())
 			onUpdateTitle?.(id, titleInput.value.trim())
@@ -174,7 +174,7 @@ const ChatHistoryView = ({
 		const now = new Date()
 		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 		const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000)
-		
+
 		if (date >= today) {
 			return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 		} else if (date >= yesterday) {
@@ -195,18 +195,18 @@ const ChatHistoryView = ({
 					<button
 						onClick={toggleSelectionMode}
 						className={`infio-chat-history-selection-btn ${selectionMode ? 'active' : ''}`}
-						title={selectionMode ? '退出选择模式' : '进入选择模式'}
+						title={selectionMode ? t('chat.history.cancelMultiSelect') : t('chat.history.multiSelect')}
 					>
 						<CopyPlus size={16} />
-						{selectionMode ? '取消' : '多选'}
+						{selectionMode ? t('chat.history.cancelMultiSelect') : t('chat.history.multiSelect')}
 					</button>
 				</div>
 			</div>
 
 			{/* description */}
 			<div className="infio-chat-history-tip">
-				{selectionMode 
-					? `选择模式 - 已选择 ${selectedConversations.size} 个对话`
+				{selectionMode
+					? t('chat.history.selectMode', { count: selectedConversations.size })
 					: String(t('chat.history.description'))
 				}
 			</div>
@@ -222,12 +222,12 @@ const ChatHistoryView = ({
 							{isAllSelected ? (
 								<>
 									<CheckSquare size={16} />
-									取消全选
+									{t('chat.history.unselectAll')}
 								</>
 							) : (
 								<>
 									<Square size={16} />
-									全选
+									{t('chat.history.selectAll')}
 								</>
 							)}
 						</button>
@@ -239,7 +239,7 @@ const ChatHistoryView = ({
 							className="infio-chat-history-batch-delete-btn"
 						>
 							<Trash2 size={16} />
-							批量删除 ({selectedConversations.size})
+							{t('chat.history.batchDelete', { count: selectedConversations.size })}
 						</button>
 					</div>
 				</div>
@@ -266,8 +266,8 @@ const ChatHistoryView = ({
 					</div>
 				) : (
 					filteredConversations.map(conversation => (
-						<div 
-							key={conversation.id} 
+						<div
+							key={conversation.id}
 							className={`infio-chat-history-item ${currentConversationId === conversation.id ? 'active' : ''} ${selectedConversations.has(conversation.id) ? 'selected' : ''}`}
 						>
 							{editingConversationId === conversation.id ? (
@@ -306,7 +306,7 @@ const ChatHistoryView = ({
 								</div>
 							) : (
 								// view mode
-								<div 
+								<div
 									className="infio-chat-history-view-mode"
 									onClick={() => handleSelectConversation(conversation.id)}
 								>

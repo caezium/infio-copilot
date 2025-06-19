@@ -8,6 +8,7 @@ import { useRAG } from '../../contexts/RAGContext'
 import { SelectVector } from '../../database/schema'
 import { Mentionable } from '../../types/mentionable'
 import { openMarkdownFile } from '../../utils/obsidian'
+import { t } from '../../lang/helpers';
 
 import SearchInputWithActions, { SearchInputRef } from './chat-input/SearchInputWithActions'
 import { editorStateToPlainText } from './chat-input/utils/editor-state-to-plain-text'
@@ -35,28 +36,28 @@ const SearchView = () => {
 
 	const handleSearch = useCallback(async (editorState?: SerializedEditorState) => {
 		let searchTerm = ''
-		
+
 		if (editorState) {
 			// 使用成熟的函数从 Lexical 编辑器状态中提取文本内容
 			searchTerm = editorStateToPlainText(editorState).trim()
 		}
-		
+
 		if (!searchTerm.trim()) {
 			setSearchResults([])
 			setHasSearched(false)
 			return
 		}
-		
+
 		setIsSearching(true)
 		setHasSearched(true)
-		
+
 		try {
 			const ragEngine = await getRAGEngine()
 			const results = await ragEngine.processQuery({
 				query: searchTerm,
 				limit: 50, // 使用用户选择的限制数量
 			})
-			
+
 			setSearchResults(results)
 			// 默认展开所有文件
 			// const uniquePaths = new Set(results.map(r => r.path))
@@ -153,7 +154,7 @@ const SearchView = () => {
 					// 移除图片显示，避免布局问题
 					img: () => <span className="obsidian-image-placeholder">[图片]</span>,
 					// 代码块样式
-					code: ({ children, inline }: { children: React.ReactNode; inline?: boolean; [key: string]: unknown }) => {
+					code: ({ children, inline }: { children: React.ReactNode; inline?: boolean;[key: string]: unknown }) => {
 						if (inline) {
 							return <code className="obsidian-inline-code">{children}</code>
 						}
@@ -176,11 +177,11 @@ const SearchView = () => {
 
 		// 按文件路径分组
 		const fileGroups = new Map<string, FileGroup>()
-		
+
 		searchResults.forEach(result => {
 			const filePath = result.path
 			const fileName = filePath.split('/').pop() || filePath
-			
+
 			if (!fileGroups.has(filePath)) {
 				fileGroups.set(filePath, {
 					path: filePath,
@@ -189,7 +190,7 @@ const SearchView = () => {
 					blocks: []
 				})
 			}
-			
+
 			const group = fileGroups.get(filePath)
 			if (group) {
 				group.blocks.push(result)
@@ -223,7 +224,8 @@ const SearchView = () => {
 					onSubmit={handleSearch}
 					mentionables={mentionables}
 					setMentionables={setMentionables}
-					placeholder="语义搜索（按回车键搜索）..."
+					placeholder={t('chat.searchView.placeholder')}
+					submitButtonLabel={t('chat.searchView.searchButton')}
 					autoFocus={true}
 					disabled={isSearching}
 				/>
@@ -232,14 +234,14 @@ const SearchView = () => {
 			{/* 结果统计 */}
 			{hasSearched && !isSearching && (
 				<div className="obsidian-search-stats">
-					{totalFiles} 个文件，{totalBlocks} 个块
+					{t('chat.searchView.stats', { fileCount: totalFiles, blockCount: totalBlocks })}
 				</div>
 			)}
 
 			{/* 搜索进度 */}
 			{isSearching && (
 				<div className="obsidian-search-loading">
-					正在搜索...
+					{t('chat.searchView.loading')}
 				</div>
 			)}
 
@@ -250,7 +252,7 @@ const SearchView = () => {
 						{groupedResults.map((fileGroup) => (
 							<div key={fileGroup.path} className="obsidian-file-group">
 								{/* 文件头部 */}
-								<div 
+								<div
 									className="obsidian-file-header"
 									onClick={() => toggleFileExpansion(fileGroup.path)}
 								>
@@ -307,10 +309,10 @@ const SearchView = () => {
 						))}
 					</div>
 				)}
-				
+
 				{!isSearching && hasSearched && groupedResults.length === 0 && (
 					<div className="obsidian-no-results">
-						<p>未找到相关结果</p>
+						<p>{t('chat.searchView.noResults')}</p>
 					</div>
 				)}
 			</div>
@@ -600,5 +602,5 @@ const SearchView = () => {
 	)
 }
 
-export default SearchView 
+export default SearchView
 

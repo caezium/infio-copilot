@@ -25,6 +25,7 @@ export type SearchInputProps = {
 	placeholder?: string
 	autoFocus?: boolean
 	disabled?: boolean
+	submitButtonLabel?: string
 }
 
 // 检查编辑器状态是否为空的辅助函数
@@ -32,18 +33,18 @@ const isEditorStateEmpty = (editorState: SerializedEditorState): boolean => {
 	if (!editorState || !editorState.root || !editorState.root.children) {
 		return true
 	}
-	
+
 	const children = editorState.root.children
 	if (children.length === 0) {
 		return true
 	}
-	
+
 	// 检查是否只有空的段落
 	if (children.length === 1 && children[0].type === 'paragraph') {
 		const paragraph = children[0] as any
 		return !paragraph.children || paragraph.children.length === 0
 	}
-	
+
 	return false
 }
 
@@ -56,15 +57,16 @@ const SearchInputWithActions = forwardRef<SearchInputRef, SearchInputProps>(
 			placeholder = '',
 			autoFocus = false,
 			disabled = false,
+			submitButtonLabel,
 		},
 		ref
 	) => {
 		const editorRef = useRef<LexicalEditor | null>(null)
 		const contentEditableRef = useRef<HTMLDivElement>(null)
 		const containerRef = useRef<HTMLDivElement>(null)
-		
+
 		// 追踪编辑器是否为空
-		const [isEmpty, setIsEmpty] = useState(() => 
+		const [isEmpty, setIsEmpty] = useState(() =>
 			initialSerializedEditorState ? isEditorStateEmpty(initialSerializedEditorState) : true
 		)
 
@@ -102,8 +104,8 @@ const SearchInputWithActions = forwardRef<SearchInputRef, SearchInputProps>(
 		}
 
 		return (
-			<div 
-				className={`infio-chat-user-input-container ${disabled ? 'disabled' : ''}`} 
+			<div
+				className={`infio-chat-user-input-container ${disabled ? 'disabled' : ''}`}
 				ref={containerRef}
 			>
 				{placeholder && isEmpty && (
@@ -142,7 +144,7 @@ const SearchInputWithActions = forwardRef<SearchInputRef, SearchInputProps>(
 						{/* TODO: add model select */}
 					</div>
 					<div className="infio-chat-user-input-controls__buttons">
-						<SearchButton onClick={() => handleSubmit()} />
+						<SearchButton onClick={() => handleSubmit()} label={submitButtonLabel} />
 					</div>
 				</div>
 				<style>

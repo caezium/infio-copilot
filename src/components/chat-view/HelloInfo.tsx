@@ -10,8 +10,8 @@ interface HelloInfoProps {
 const HelloInfo: React.FC<HelloInfoProps> = ({ onNavigate }) => {
 	const navigationItems = [
 		{
-			label: '语义搜索',
-			description: '使用 RAG 在笔记库中进行语义搜索',
+			label: t('chat.navigation.rag'),
+			description: t('chat.navigation.ragDesc'),
 			icon: <Search size={20} />,
 			action: () => onNavigate('search'),
 		},

@@ -11,7 +11,9 @@ export default {
 			customMode: "Custom Mode",
 			customModeDesc: "Define personalized AI modes with specific behaviors",
 			mcp: "MCP",
-			mcpDesc: "Manage Model Context Protocol integrations"
+			mcpDesc: "Manage Model Context Protocol integrations",
+			rag: "Semantic Search",
+			ragDesc: "Use RAG to perform semantic search in your vault",
 		},
 		errors: {
 			failedToLoadConversation: "Failed to load conversation",
@@ -47,7 +49,17 @@ export default {
 			save: "Save",
 			cancel: "Cancel",
 			yesterday: "Yesterday",
-			daysAgo: "days ago"
+			daysAgo: "days ago",
+			multiSelect: "Multi-select",
+			cancelMultiSelect: "Cancel",
+			selectMode: "Selection mode - {count} selected",
+			selectAll: "Select all",
+			unselectAll: "Unselect all",
+			batchDelete: "Batch delete ({count})",
+			confirmBatchDelete: "Are you sure you want to delete the selected {count} conversations? This action cannot be undone.",
+			batchDeleteSuccess: "Successfully deleted {count} conversations",
+			batchDeleteFail: "Failed to delete {count} conversations",
+			pleaseSelectFirst: "Please select conversations first",
 		},
 		shortcutInfo: {
 			editInline: "Edit inline",
@@ -125,7 +137,14 @@ export default {
 			image: "Image",
 			createCommand: "Create Command",
 			uploadNewImage: "Upload New Image"
-		}
+		},
+		searchView: {
+			placeholder: "Semantic search (press Enter to search)...",
+			stats: "{fileCount} files, {blockCount} blocks",
+			loading: "Searching...",
+			noResults: "No relevant results found",
+			searchButton: "Search",
+		},
 	},
 	inlineEdit: {
 		placeholder: "Input instruction, Enter to submit, Esc to close",
@@ -239,7 +258,7 @@ export default {
 			embeddingModel: 'Embedding model:',
 			embeddingModelDescription: 'Model used for document vectorization and semantic search, supporting RAG functionality',
 		},
-		
+
 		// Model Provider Settings
 		ModelProvider: {
 			noApiKeySet: 'No API key has been set',
@@ -282,7 +301,7 @@ export default {
 				test: 'Test',
 			},
 		},
-		
+
 		// Model Parameters Section
 		ModelParameters: {
 			title: 'Model parameters',
@@ -297,7 +316,7 @@ export default {
 			maxTokens: 'Max tokens',
 			maxTokensDescription: 'This parameter changes the maximum number of tokens the model is allowed to generate. Default: 4096',
 		},
-		
+
 		// Files Search Section
 		FilesSearch: {
 			title: 'File search',
@@ -317,7 +336,7 @@ export default {
 			ripgrepPath: 'ripgrep path',
 			ripgrepPathDescription: 'Path to the ripgrep binary. When using ripgrep regex search, this is required.',
 		},
-		
+
 		// Chat Behavior Section
 		ChatBehavior: {
 			title: 'Chat behavior',
@@ -327,7 +346,7 @@ export default {
 			currentFile: 'Current File',
 			vault: 'Vault',
 		},
-		
+
 		// Deep Research Section
 		WebSearch: {
 			title: 'Web search',
@@ -341,7 +360,7 @@ export default {
 			jinaApiKey: 'Jina API key (Optional)',
 			jinaApiKeyDescription: 'API key for parsing web pages into markdown format. If not provided, local parsing will be used. Get your key from',
 		},
-		
+
 		// RAG Section
 		RAG: {
 			title: 'RAG(advanced)',
@@ -363,8 +382,15 @@ export default {
 			noMatchingFiles: 'No files match the inclusion patterns',
 			excludedFiles: 'Excluded Files',
 			noExcludedFiles: 'No files match the exclusion patterns',
+			indexStatus: "Index Status",
+			indexedFiles: "Indexed files: {count}",
+			rebuildIndex: "Rebuild Index",
+			updateIndex: "Update Index",
+			indexing: "Indexing...",
+			indexed: "Index is up to date.",
+			indexError: "Indexing failed: {error}",
 		},
-		
+
 		// AutoComplete Section
 		AutoComplete: {
 			// Basic AutoComplete Settings
@@ -375,7 +401,7 @@ export default {
 			cacheCompletionsDescription: 'If disabled, the plugin will not cache the completions. After accepting or rejecting a completion, the plugin will not remember it. This might result in more API calls.',
 			debugMode: 'Debug mode',
 			debugModeDescription: 'If enabled, various debug messages will be logged to the console, such as the complete response from the API, including the chain of thought tokens.',
-			
+
 			// Preprocessing Settings
 			preprocessing: {
 				title: 'Preprocessing',
@@ -387,7 +413,7 @@ export default {
 				maxSuffixLengthDescription: 'The maximum number of characters that will be included in the suffix. A larger value will increase the context for the completion, but it can also increase the cost or push you over the token limit.',
 				chars: 'chars',
 			},
-			
+
 			// Postprocessing Settings
 			postprocessing: {
 				title: 'Postprocessing',
@@ -396,7 +422,7 @@ export default {
 				removeCodeBlockIndicators: 'Auto remove duplicate code block indicators',
 				removeCodeBlockIndicatorsDescription: 'The AI model might eagerly add a code block indicator (`), even though the cursor is already inside a code block. If this setting is enabled, the plugin will automatically remove these duplicate indicators from the completion.',
 			},
-			
+
 			// Trigger Settings
 			trigger: {
 				title: 'Trigger',
@@ -406,7 +432,7 @@ export default {
 				words: 'Trigger words',
 				wordsDescription: 'Completions will be triggered if the text before the matches any of these words or characters. This can either be a direct string match or a regex match. When using a regex, make sure to include the end of line character ($).',
 			},
-			
+
 			// Privacy Settings
 			privacy: {
 				title: 'Privacy',
@@ -421,7 +447,7 @@ export default {
 				ignoredTagsDescription: 'Files containing any of these tags will be ignored. When you open a file containing a tag listed here, the plugin will automatically disable itself and display a \'disabled\' status in the bottom menu. Enter one tag per line.',
 				ignoredTagsPlaceholder: 'Your file tags, e.g., secret',
 			},
-			
+
 			// Danger Zone Settings
 			dangerZone: {
 				title: 'Danger zone',
@@ -432,7 +458,7 @@ export default {
 				advancedModeDescription: 'If you are familiar with prompt engineering, you can enable this setting to view the prompt generation and a few shot example settings. Turn off this button. It will not reset your changes; use the factory reset button for that.',
 				resetComplete: 'Factory reset complete.',
 			},
-			
+
 			// Advanced Settings
 			advanced: {
 				title: 'Advanced',
