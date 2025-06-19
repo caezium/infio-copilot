@@ -205,19 +205,15 @@ export default class InfioPlugin extends Plugin {
 			callback: async () => {
 				const notice = new Notice(t('notifications.rebuildingIndex'), 0)
 				try {
-					const ragEngine = await this.getRAGEngine()
-					await ragEngine.updateVaultIndex(
-						{ reindexAll: true },
-						(queryProgress) => {
+					await this.runRAGIndex({
+						reindexAll: true,
+						onProgress: (queryProgress) => {
 							if (queryProgress.type === 'indexing') {
-								const { completedChunks, totalChunks } =
-									queryProgress.indexProgress
-								notice.setMessage(
-									t('notifications.indexingChunks', { completedChunks, totalChunks }),
-								)
+								const { completedChunks, totalChunks } = queryProgress.indexProgress
+								notice.setMessage(t('notifications.indexingChunks', { completedChunks, totalChunks }))
 							}
-						},
-					)
+						}
+					})
 					notice.setMessage(t('notifications.rebuildComplete'))
 				} catch (error) {
 					console.error(error)
@@ -236,19 +232,15 @@ export default class InfioPlugin extends Plugin {
 			callback: async () => {
 				const notice = new Notice(t('notifications.updatingIndex'), 0)
 				try {
-					const ragEngine = await this.getRAGEngine()
-					await ragEngine.updateVaultIndex(
-						{ reindexAll: false },
-						(queryProgress) => {
+					await this.runRAGIndex({
+						reindexAll: false,
+						onProgress: (queryProgress) => {
 							if (queryProgress.type === 'indexing') {
-								const { completedChunks, totalChunks } =
-									queryProgress.indexProgress
-								notice.setMessage(
-									t('notifications.indexingChunks', { completedChunks, totalChunks }),
-								)
+								const { completedChunks, totalChunks } = queryProgress.indexProgress
+								notice.setMessage(t('notifications.indexingChunks', { completedChunks, totalChunks }))
 							}
-						},
-					)
+						}
+					})
 					notice.setMessage(t('notifications.updateComplete'))
 				} catch (error) {
 					console.error(error)
@@ -550,5 +542,10 @@ export default class InfioPlugin extends Plugin {
 		new Notice(t('notifications.reloadingInfio'), 1000)
 		leaves[0].detach()
 		await this.activateChatView()
+	}
+
+	async runRAGIndex({ reindexAll, onProgress }: { reindexAll: boolean, onProgress?: (progress: any) => void }) {
+		const ragEngine = await this.getRAGEngine();
+		await ragEngine.updateVaultIndex({ reindexAll }, onProgress);
 	}
 }

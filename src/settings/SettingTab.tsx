@@ -329,23 +329,23 @@ export class InfioSettingTab extends PluginSettingTab {
 	renderRAGSection(containerEl: HTMLElement): void {
 		// 创建一个折叠区域的容器
 		const ragContainer = containerEl.createDiv("rag-settings-container");
-		
+
 		// 创建标题元素，添加折叠控件
 		const headerEl = ragContainer.createEl("div", { cls: "infio-collapsible-heading" });
-		
+
 		// 添加展开/折叠指示器
 		const toggleIcon = headerEl.createEl("span", { cls: "infio-toggle-icon" });
 		toggleIcon.textContent = "▶"; // 默认为折叠状态，使用右箭头
-		
+
 		// 添加标题文本
 		const titleEl = headerEl.createEl("h3", { text: t('settings.RAG.title') });
-		
+
 		// 创建内容容器
 		const contentContainer = ragContainer.createEl("div", { cls: "infio-collapsible-content" });
-		
+
 		// 默认设置为隐藏状态
 		contentContainer.style.display = "none";
-		
+
 		// 添加点击事件处理
 		headerEl.addEventListener("click", () => {
 			if (contentContainer.style.display === "none") {
@@ -358,22 +358,86 @@ export class InfioSettingTab extends PluginSettingTab {
 				toggleIcon.style.transform = "rotate(0deg)";
 			}
 		});
-		
+
 		// 添加样式
 		headerEl.style.cursor = "pointer";
 		headerEl.style.display = "flex";
 		headerEl.style.alignItems = "center";
 		headerEl.style.marginBottom = "10px";
 		headerEl.style.padding = "6px 0";
-		
+
 		toggleIcon.style.marginRight = "5px";
 		toggleIcon.style.fontSize = "10px";
 		toggleIcon.style.transition = "transform 0.15s ease";
-		
+
 		titleEl.style.margin = "0";
 		titleEl.style.fontSize = "16px";
 		titleEl.style.fontWeight = "600";
-		
+
+		// --- Index Status Section ---
+		const indexStatusContainer = ragContainer.createDiv('infio-rag-index-status');
+		let statusText = indexStatusContainer.createEl('div', { text: t('settings.RAG.indexStatus') });
+		let indexedFilesText = indexStatusContainer.createEl('div', { text: t('settings.RAG.indexedFiles', { count: '...' }) });
+		let statusDetail = indexStatusContainer.createEl('div', { text: '' });
+		const updateStatus = (status: string, count?: number, error?: string) => {
+			if (status === 'indexing') {
+				statusDetail.textContent = t('settings.RAG.indexing');
+			} else if (status === 'idle') {
+				statusDetail.textContent = t('settings.RAG.indexed');
+			} else if (status === 'error') {
+				statusDetail.textContent = t('settings.RAG.indexError', { error: error || '' });
+			}
+			if (typeof count === 'number') {
+				indexedFilesText.textContent = t('settings.RAG.indexedFiles', { count });
+			}
+		};
+		const refreshIndexStatus = async () => {
+			try {
+				const ragEngine = await this.plugin.getRAGEngine();
+				const vectorManager = ragEngine['vectorManager'];
+				const embeddingModel = ragEngine['embeddingModel'];
+				if (!vectorManager || !embeddingModel) {
+					updateStatus('error', 0, 'No embedding model');
+					return;
+				}
+				const files = await vectorManager['repository'].getAllIndexedFilePaths(embeddingModel);
+				updateStatus('idle', files.length);
+			} catch (e) {
+				updateStatus('error', 0, String(e));
+			}
+		};
+		refreshIndexStatus();
+
+		const btnRow = indexStatusContainer.createDiv('infio-rag-index-btn-row');
+		const rebuildBtn = btnRow.createEl('button', { text: t('settings.RAG.rebuildIndex') });
+		rebuildBtn.onclick = async () => {
+			updateStatus('indexing');
+			try {
+				await this.plugin.runRAGIndex({
+					reindexAll: true,
+					onProgress: () => updateStatus('indexing'),
+				});
+				await refreshIndexStatus();
+			} catch (e) {
+				updateStatus('error', 0, String(e));
+			}
+		};
+		const updateBtn = btnRow.createEl('button', { text: t('settings.RAG.updateIndex') });
+		updateBtn.onclick = async () => {
+			updateStatus('indexing');
+			try {
+				await this.plugin.runRAGIndex({
+					reindexAll: false,
+					onProgress: () => updateStatus('indexing'),
+				});
+				await refreshIndexStatus();
+			} catch (e) {
+				updateStatus('error', 0, String(e));
+			}
+		};
+
+
+
 		// 以下是原有的设置内容，移动到内容容器中
 		new Setting(contentContainer)
 			.setName(t('settings.RAG.includePatterns'))
@@ -541,26 +605,26 @@ export class InfioSettingTab extends PluginSettingTab {
 	renderAutoCompleteSection(containerEl: HTMLElement): void {
 		// 创建一个折叠区域的容器
 		const autoCompleteContainer = containerEl.createDiv("auto-complete-settings-container");
-		
+
 		// 创建标题元素，添加折叠控件
 		const headerEl = autoCompleteContainer.createEl("div", { cls: "infio-collapsible-heading" });
-		
+
 		// 添加展开/折叠指示器
 		const toggleIcon = headerEl.createEl("span", { cls: "infio-toggle-icon" });
 		toggleIcon.textContent = "▶"; // 默认为折叠状态，使用右箭头
-		
+
 		// 添加标题文本
 		const titleEl = headerEl.createEl("h3", { text: t('settings.AutoComplete.title') });
-		
+
 		// 创建内容容器
 		const contentContainer = autoCompleteContainer.createEl("div", { cls: "infio-collapsible-content" });
-		
+
 		// 保存容器引用
 		this.autoCompleteContainer = contentContainer;
-		
+
 		// 默认设置为隐藏状态
 		contentContainer.style.display = "none";
-		
+
 		// 添加点击事件处理
 		headerEl.addEventListener("click", () => {
 			if (contentContainer.style.display === "none") {
@@ -573,22 +637,22 @@ export class InfioSettingTab extends PluginSettingTab {
 				toggleIcon.style.transform = "rotate(0deg)";
 			}
 		});
-		
+
 		// 添加样式
 		headerEl.style.cursor = "pointer";
 		headerEl.style.display = "flex";
 		headerEl.style.alignItems = "center";
 		headerEl.style.marginBottom = "10px";
 		headerEl.style.padding = "6px 0";
-		
+
 		toggleIcon.style.marginRight = "5px";
 		toggleIcon.style.fontSize = "10px";
 		toggleIcon.style.transition = "transform 0.15s ease";
-		
+
 		titleEl.style.margin = "0";
 		titleEl.style.fontSize = "16px";
 		titleEl.style.fontWeight = "600";
-		
+
 		// 在内容容器中渲染AutoComplete设置
 		this.renderAutoCompleteContent(contentContainer);
 	}
@@ -670,7 +734,7 @@ export class InfioSettingTab extends PluginSettingTab {
 		// );
 
 		// // Advanced
-		
+
 		// if (this.plugin.settings.advancedMode) {
 		// 	new Setting(containerEl).setName(t('settings.AutoComplete.advanced.title')).setHeading();
 		// 	this.renderComponent(containerEl,
