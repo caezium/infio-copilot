@@ -11,16 +11,38 @@ Infio Copilot 是一款可高度个人定制化的 Obsidian AI 插件，旨在�
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/felixduan)
 
 ## 最新版本
-[0.5.0](https://github.com/infiolab/infio-copilot/releases/tag/0.5.0) 增强性能和稳定性改进, 增加了 MC P支持
+[0.6.15](https://github.com/infiolab/infio-copilot/releases/tag/0.6.15) – 更新聊天视图样式，修复 bug，新增功能（2025年6月18日）
 
 ## 最近更新
-[0.2.4](https://github.com/infiolab/infio-copilot/releases/tag/0.2.4) 增加了多语言支持
+[0.6.15](https://github.com/infiolab/infio-copilot/releases/tag/0.6.15) 更新聊天视图样式
 
-[0.2.3](https://github.com/infiolab/infio-copilot/releases/tag/0.2.3) 增加了自定义模式配置，现在无法创建自己的 agent
+[0.6.14](https://github.com/infiolab/infio-copilot/releases/tag/0.6.14) 修复搜索视图选中文本错误，修复模型选择错误
 
-[0.1.7](https://github.com/infiolab/infio-copilot/releases/tag/0.1.7) 增加了图片选择器模态框，允许用户在 Obsidian vault 或本地文件浏览器中搜索、选择和上传图片
+[0.6.13](https://github.com/infiolab/infio-copilot/releases/tag/0.6.13) 修复并更新设置迁移
 
-[0.1.6](https://github.com/infiolab/infio-copilot/releases/tag/0.1.6) 更新了应用视图 (apply view)，现在可以在应用视图中编辑内容
+[0.6.12](https://github.com/infiolab/infio-copilot/releases/tag/0.6.12) 修复设置迁移
+
+[0.6.11](https://github.com/infiolab/infio-copilot/releases/tag/0.6.11) 更新设置迁移，优化正则搜索结果，新增崩溃上报（感谢 @travertexs）
+
+[0.6.10](https://github.com/infiolab/infio-copilot/releases/tag/0.6.10) 更新聊天历史视图，新增向量检索视图
+
+[0.6.8](https://github.com/infiolab/infio-copilot/releases/tag/0.6.8) 修复向量嵌入内存泄漏，更新聊天视图样式
+
+[0.6.7](https://github.com/infiolab/infio-copilot/releases/tag/0.6.7) 修复 pdf/md 内容 null byte 错误，修复向量嵌入内存泄漏
+
+[0.6.6](https://github.com/infiolab/infio-copilot/releases/tag/0.6.6) 修复 pdf 内容 null byte 错误
+
+[0.6.5](https://github.com/infiolab/infio-copilot/releases/tag/0.6.5) 修复 openai provider 测试错误
+
+[0.6.4](https://github.com/infiolab/infio-copilot/releases/tag/0.6.4) 新增 siliconflow 批量嵌入功能
+
+[0.6.0](https://github.com/infiolab/infio-copilot/releases/tag/0.6.0) 新增 Infio 内置 MCP 支持，优化启动性能，支持 Infio provider MCP 工具
+
+[0.5.2](https://github.com/infiolab/infio-copilot/releases/tag/0.5.2) 新增 Infio provider，新增 Infio 嵌入模型
+
+[0.5.1](https://github.com/infiolab/infio-copilot/releases/tag/0.5.1) 修复当前文件内容提示
+
+[0.5.0](https://github.com/infiolab/infio-copilot/releases/tag/0.5.0) 增强性能和稳定性，增加 MCP 支持
 
 ## 功能特点
 

@@ -5,16 +5,38 @@
 <a href="README.md" target="_blank"><b>English</b></a>  |  <a href="README_zh-CN.md" target="_blank"><b>中文</b></a>
 
 ## Latest Version
-[0.5.0](https://github.com/infiolab/infio-copilot/releases/tag/0.5.0) Enhanced performance and stability improvements, added MCP support
+[0.6.15](https://github.com/infiolab/infio-copilot/releases/tag/0.6.15) – Update chat view style, bug fixes, and new features (June 18, 2025)
 
 ## Recent Updates
-[0.2.4](https://github.com/infiolab/infio-copilot/releases/tag/0.2.4) Added multilingual support
+[0.6.15](https://github.com/infiolab/infio-copilot/releases/tag/0.6.15) Update chat view style
 
-[0.2.3](https://github.com/infiolab/infio-copilot/releases/tag/0.2.3) Add custom mode config, you can create you own agent now
+[0.6.14](https://github.com/infiolab/infio-copilot/releases/tag/0.6.14) Fix search view user select text error, fix model select error
 
-[0.1.7](https://github.com/infiolab/infio-copilot/releases/tag/0.1.7) Added image selector modal, allowing users to search, select, and upload images in obsidian vault or local file browser
+[0.6.13](https://github.com/infiolab/infio-copilot/releases/tag/0.6.13) Fix and update settings migration
 
-[0.1.6](https://github.com/infiolab/infio-copilot/releases/tag/0.1.6) update apply view, you can edit content in apply view
+[0.6.12](https://github.com/infiolab/infio-copilot/releases/tag/0.6.12) Fix settings migration
+
+[0.6.11](https://github.com/infiolab/infio-copilot/releases/tag/0.6.11) Update settings migration, update regex search result, add crash reporter (thanks @travertexs)
+
+[0.6.10](https://github.com/infiolab/infio-copilot/releases/tag/0.6.10) Update chat history view, add vector search view
+
+[0.6.8](https://github.com/infiolab/infio-copilot/releases/tag/0.6.8) Fixed vector embedding memory leak, update chat view style
+
+[0.6.7](https://github.com/infiolab/infio-copilot/releases/tag/0.6.7) Fixed pdf & md content null byte error, fixed vector embedding memory leak
+
+[0.6.6](https://github.com/infiolab/infio-copilot/releases/tag/0.6.6) Fixed pdf content null byte error
+
+[0.6.5](https://github.com/infiolab/infio-copilot/releases/tag/0.6.5) Fixed openai provider test error
+
+[0.6.4](https://github.com/infiolab/infio-copilot/releases/tag/0.6.4) Added batch embedding for siliconflow
+
+[0.6.0](https://github.com/infiolab/infio-copilot/releases/tag/0.6.0) Added Infio built-in MCP support, optimized startup performance, support Infio provider MCP tools
+
+[0.5.2](https://github.com/infiolab/infio-copilot/releases/tag/0.5.2) Added Infio provider, added Infio embedding models
+
+[0.5.1](https://github.com/infiolab/infio-copilot/releases/tag/0.5.1) Fix current file content prompt
+
+[0.5.0](https://github.com/infiolab/infio-copilot/releases/tag/0.5.0) Enhanced performance and stability improvements, added MCP support
 
 ## Features
 
