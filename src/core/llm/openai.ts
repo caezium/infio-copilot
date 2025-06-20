@@ -22,10 +22,11 @@ export class OpenAIAuthenticatedProvider implements BaseLLMProvider {
 	private adapter: OpenAIMessageAdapter
 	private client: OpenAI
 
-	constructor(apiKey: string) {
+	constructor(apiKey: string, enableCors?: boolean, safeFetch?: typeof fetch) {
 		this.client = new OpenAI({
 			apiKey,
 			dangerouslyAllowBrowser: true,
+			...(enableCors && safeFetch ? { fetch: safeFetch } : {}),
 		})
 		this.adapter = new OpenAIMessageAdapter()
 	}

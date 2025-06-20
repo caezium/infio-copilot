@@ -230,6 +230,12 @@ export default {
 			enterApiKey: 'Enter your api key',
 			enterApiKeyDescription: 'API Key can be obtained from their official website{provider_api_url}',
 			enterCustomUrl: 'Enter your custom api endpoint url',
+			enableCors: 'Enable CORS',
+			testCorsBtn: 'Test if CORS is needed',
+			corsTestSetUrlKey: 'Please set base URL and API key first.',
+			corsNotNeeded: 'CORS is NOT required for this endpoint.',
+			corsNeeded: 'CORS is required for this endpoint. Enable CORS bypass.',
+			corsTestFailed: 'Failed to connect to endpoint',
 		},
 		Models: {
 			chatModel: 'Chat model:',
