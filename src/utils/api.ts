@@ -1,6 +1,7 @@
 import { INFIO_BASE_URL, OPENROUTER_BASE_URL } from '../constants'
 import { ApiProvider } from '../types/llm/model'
 import { InfioSettings } from '../types/settings'
+import { requestUrl, RequestUrlParam } from 'obsidian';
 
 export interface ModelInfo {
 	maxTokens?: number
@@ -1835,4 +1836,36 @@ export const GetDefaultModelId = (provider: ApiProvider): { chat: string, autoCo
 				"embedding": null,
 			}
 	}
+}
+
+// safeFetch: a drop-in replacement for fetch that uses Obsidian's requestUrl to bypass CORS
+export async function safeFetch(input: string | RequestUrlParam, init?: RequestInit): Promise<Response> {
+	let url: string;
+	let options: RequestUrlParam;
+	if (typeof input === 'string') {
+		url = input;
+		// Convert headers to Record<string, string> if needed
+		let headers: Record<string, string> | undefined = undefined;
+		if (init?.headers) {
+			if (Array.isArray(init.headers)) {
+				headers = Object.fromEntries(init.headers);
+			} else if (init.headers instanceof Headers) {
+				headers = Object.fromEntries(Array.from(init.headers.entries()));
+			} else {
+				headers = init.headers as Record<string, string>;
+			}
+		}
+		options = { url, method: init?.method || 'GET', headers, body: init?.body as string };
+	} else {
+		options = input;
+		url = input.url;
+	}
+
+	const result = await requestUrl(options);
+
+	// requestUrl does not provide statusText, so omit it
+	return new Response(result.arrayBuffer, {
+		status: result.status,
+		headers: result.headers,
+	});
 }
