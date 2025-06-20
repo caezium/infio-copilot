@@ -10,7 +10,6 @@ import {
 	LLMResponseStreaming,
 } from '../../types/llm/response'
 import { InfioSettings } from '../../types/settings'
-import { safeFetch } from '../../utils/api'
 
 import { AnthropicProvider } from './anthropic'
 import { GeminiProvider } from './gemini'
@@ -77,11 +76,7 @@ class LLMManager implements LLMManagerInterface {
 				settings.deepseekProvider.baseUrl
 				: DEEPSEEK_BASE_URL
 		)
-		this.openaiProvider = new OpenAIAuthenticatedProvider(
-			settings.openaiProvider.apiKey,
-			settings.openaiProvider.enableCors,
-			safeFetch as unknown as typeof fetch
-		)
+		this.openaiProvider = new OpenAIAuthenticatedProvider(settings.openaiProvider.apiKey)
 		this.anthropicProvider = new AnthropicProvider(settings.anthropicProvider.apiKey)
 		this.googleProvider = new GeminiProvider(settings.googleProvider.apiKey)
 		this.groqProvider = new GroqProvider(settings.groqProvider.apiKey)
@@ -91,12 +86,7 @@ class LLMManager implements LLMManagerInterface {
 				: GROK_BASE_URL
 		)
 		this.ollamaProvider = new OllamaProvider(settings.ollamaProvider.baseUrl)
-		this.openaiCompatibleProvider = new OpenAICompatibleProvider(
-			settings.openaicompatibleProvider.apiKey,
-			settings.openaicompatibleProvider.baseUrl,
-			settings.openaicompatibleProvider.enableCors,
-			safeFetch as unknown as typeof fetch
-		)
+		this.openaiCompatibleProvider = new OpenAICompatibleProvider(settings.openaicompatibleProvider.apiKey, settings.openaicompatibleProvider.baseUrl)
 		this.isInfioEnabled = !!settings.infioProvider.apiKey
 	}
 

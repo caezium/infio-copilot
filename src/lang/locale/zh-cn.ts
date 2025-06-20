@@ -251,12 +251,6 @@ export default {
 			enterApiKey: '输入您的 API 密钥',
 			enterApiKeyDescription: 'API Key 可以从官方网站{provider_api_url}获取',
 			enterCustomUrl: '输入您的自定义 API 端点 URL',
-			enableCors: '启用 CORS',
-			testCorsBtn: '测试是否需要 CORS',
-			corsTestSetUrlKey: '请先设置 Base URL 和 API Key。',
-			corsNotNeeded: '此端点不需要 CORS。',
-			corsNeeded: '此端点需要 CORS，请启用 CORS 代理。',
-			corsTestFailed: '无法连接到端点。',
 		},
 		Models: {
 			chatModel: '聊天模型：',

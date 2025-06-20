@@ -118,15 +118,13 @@ const OpenAIProviderSchema = z.object({
 	apiKey: z.string().catch(''),
 	baseUrl: z.string().optional(),
 	useCustomUrl: z.boolean().catch(false),
-	models: z.array(z.string()).catch([]),
-	enableCors: z.boolean().catch(false),
+	models: z.array(z.string()).catch([])
 }).catch({
 	name: 'OpenAI',
 	apiKey: '',
 	baseUrl: '',
 	useCustomUrl: false,
-	models: [],
-	enableCors: false,
+	models: []
 })
 
 const OpenAICompatibleProviderSchema = z.object({
@@ -134,15 +132,13 @@ const OpenAICompatibleProviderSchema = z.object({
 	apiKey: z.string().catch(''),
 	baseUrl: z.string().optional(),
 	useCustomUrl: z.boolean().catch(true),
-	models: z.array(z.string()).catch([]),
-	enableCors: z.boolean().catch(false),
+	models: z.array(z.string()).catch([])
 }).catch({
 	name: 'OpenAICompatible',
 	apiKey: '',
 	baseUrl: '',
 	useCustomUrl: true,
-	models: [],
-	enableCors: false,
+	models: []
 })
 
 const OllamaProviderSchema = z.object({

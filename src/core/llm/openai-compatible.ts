@@ -21,36 +21,33 @@ export class OpenAICompatibleProvider implements BaseLLMProvider {
   private client: OpenAI
   private apiKey: string
   private baseURL: string
-  private enableCors: boolean
 
-  constructor(apiKey: string, baseURL: string, enableCors?: boolean, safeFetch?: typeof fetch) {
-    this.adapter = new OpenAIMessageAdapter()
-    this.apiKey = apiKey
-    this.baseURL = baseURL
-    this.enableCors = !!enableCors
+  constructor(apiKey: string, baseURL: string) {
+		this.adapter = new OpenAIMessageAdapter()
     this.client = new OpenAI({
       apiKey: apiKey,
       baseURL: baseURL,
       dangerouslyAllowBrowser: true,
-      ...(this.enableCors && safeFetch ? { fetch: safeFetch } : {}),
     })
+    this.apiKey = apiKey
+    this.baseURL = baseURL
   }
 
   // 检查是否为阿里云Qwen API
   private isAlibabaQwen(): boolean {
-    return this.baseURL === ALIBABA_QWEN_BASE_URL ||
-      this.baseURL?.includes('dashscope.aliyuncs.com')
+    return this.baseURL === ALIBABA_QWEN_BASE_URL || 
+           this.baseURL?.includes('dashscope.aliyuncs.com')
   }
 
   // 获取提供商特定的额外参数
   private getExtraParams(isStreaming: boolean): Record<string, any> {
     const extraParams: Record<string, any> = {}
-
+    
     // 阿里云Qwen API需要在非流式调用中设置 enable_thinking: false
     if (this.isAlibabaQwen() && !isStreaming) {
       extraParams.enable_thinking = false
     }
-
+    
     return extraParams
   }
 
@@ -64,15 +61,7 @@ export class OpenAICompatibleProvider implements BaseLLMProvider {
         'OpenAI Compatible base URL or API key is missing. Please set it in settings menu.',
       )
     }
-    // If streaming is requested but CORS bypass is enabled, fall back to non-streaming
-    if (this.enableCors && options && 'stream' in options && options.stream) {
-      // eslint-disable-next-line no-console
-      console.warn('Streaming is not supported when CORS bypass is enabled. Falling back to non-streaming response.');
-      // Clone options and set stream to false
-      const nonStreamOptions = { ...options, stream: false };
-      const extraParams = this.getExtraParams(false);
-      return this.adapter.generateResponse(this.client, request, nonStreamOptions, extraParams);
-    }
+
     const extraParams = this.getExtraParams(false) // 非流式调用
     return this.adapter.generateResponse(this.client, request, options, extraParams)
   }
@@ -87,17 +76,7 @@ export class OpenAICompatibleProvider implements BaseLLMProvider {
         'OpenAI Compatible base URL or API key is missing. Please set it in settings menu.',
       )
     }
-    if (this.enableCors) {
-      // eslint-disable-next-line no-console
-      console.warn('Streaming is not supported when CORS bypass is enabled. Falling back to non-streaming response.');
-      // Convert LLMRequestStreaming to LLMRequestNonStreaming
-      const nonStreamingRequest: LLMRequestNonStreaming = { ...request, stream: false };
-      const response = await this.generateResponse(model, nonStreamingRequest, options);
-      async function* singleChunkStream() {
-        yield response as any;
-      }
-      return singleChunkStream();
-    }
+
     const extraParams = this.getExtraParams(true) // 流式调用
     return this.adapter.streamResponse(this.client, request, options, extraParams)
   }

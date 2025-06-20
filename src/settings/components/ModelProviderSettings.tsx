@@ -1,5 +1,4 @@
 import React from 'react';
-import { Notice } from 'obsidian';
 
 import { t } from '../../lang/helpers';
 import InfioPlugin from "../../main";
@@ -172,19 +171,6 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 		});
 	};
 
-	const updateProviderEnableCors = (provider: ApiProvider, value: boolean) => {
-		const providerKey = getProviderSettingKey(provider);
-		const providerSettings = settings[providerKey];
-
-		handleSettingsUpdate({
-			...settings,
-			[providerKey]: {
-				...providerSettings,
-				enableCors: value
-			}
-		});
-	};
-
 	const testApiConnection = async (provider: ApiProvider, modelId?: string) => {
 		console.debug(`Testing connection for ${provider}...`);
 
@@ -308,12 +294,12 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 		const providerSettingKey = getProviderSettingKey(provider);
 		const providerSettings = settings[providerSettingKey] || {};
 		const currentModels = providerSettings.models || [];
-
+		
 		// 如果是自定义模型且不在列表中，则添加
-		const updatedModels = isCustom && !currentModels.includes(modelId)
-			? [...currentModels, modelId]
+		const updatedModels = isCustom && !currentModels.includes(modelId) 
+			? [...currentModels, modelId] 
 			: currentModels;
-
+		
 		handleSettingsUpdate({
 			...settings,
 			chatModelProvider: provider,
@@ -330,12 +316,12 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 		const providerSettingKey = getProviderSettingKey(provider);
 		const providerSettings = settings[providerSettingKey] || {};
 		const currentModels = providerSettings.models || [];
-
+		
 		// 如果是自定义模型且不在列表中，则添加
-		const updatedModels = isCustom && !currentModels.includes(modelId)
-			? [...currentModels, modelId]
+		const updatedModels = isCustom && !currentModels.includes(modelId) 
+			? [...currentModels, modelId] 
 			: currentModels;
-
+		
 		handleSettingsUpdate({
 			...settings,
 			applyModelProvider: provider,
@@ -352,12 +338,12 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 		const providerSettingKey = getProviderSettingKey(provider);
 		const providerSettings = settings[providerSettingKey] || {};
 		const currentModels = providerSettings.models || [];
-
+		
 		// 如果是自定义模型且不在列表中，则添加
-		const updatedModels = isCustom && !currentModels.includes(modelId)
-			? [...currentModels, modelId]
+		const updatedModels = isCustom && !currentModels.includes(modelId) 
+			? [...currentModels, modelId] 
 			: currentModels;
-
+		
 		handleSettingsUpdate({
 			...settings,
 			embeddingModelProvider: provider,
@@ -404,41 +390,6 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 	const renderProviderConfig = (provider: ApiProvider) => {
 		const providerSetting = getProviderSetting(provider);
 
-		// Type guard for enableCors and CORS test
-		const hasEnableCors = (p: ApiProvider): p is ApiProvider.OpenAI | ApiProvider.OpenAICompatible =>
-			p === ApiProvider.OpenAI || p === ApiProvider.OpenAICompatible;
-
-		const handleTestCors = async () => {
-			if (!hasEnableCors(provider)) return;
-			const providerKey = getProviderSettingKey(provider);
-			const providerSettings = settings[providerKey];
-			const baseUrl = providerSettings.baseUrl;
-			const apiKey = providerSettings.apiKey;
-			if (!baseUrl || !apiKey) {
-				new Notice(t('settings.ApiProvider.corsTestSetUrlKey'));
-				return;
-			}
-			const testUrl = baseUrl.replace(/\/$/, '') + '/v1/models';
-			const headers = { 'Authorization': `Bearer ${apiKey}` };
-			try {
-				const resp = await fetch(testUrl, { headers });
-				if (resp.ok) {
-					new Notice(t('settings.ApiProvider.corsNotNeeded'));
-					return;
-				}
-			} catch (e) { }
-			try {
-				// @ts-ignore
-				const { safeFetch } = await import('../../utils/api');
-				const resp2 = await safeFetch(testUrl, { headers });
-				if (resp2.ok) {
-					new Notice(t('settings.ApiProvider.corsNeeded'));
-					return;
-				}
-			} catch (e) { }
-			new Notice(t('settings.ApiProvider.corsTestFailed'));
-		};
-
 		return (
 			<div className="provider-config">
 				{provider !== ApiProvider.Ollama && (
@@ -460,23 +411,6 @@ const CustomProviderSettings: React.FC<CustomProviderSettingsProps> = ({ plugin,
 					onToggleCustomUrl={(value) => updateProviderUseCustomUrl(provider, value)}
 					onChangeBaseUrl={(value) => updateProviderBaseUrl(provider, value)}
 				/>
-
-				{/* CORS bypass checkbox and test button for OpenAI and OpenAICompatible */}
-				{hasEnableCors(provider) && (
-					<div style={{ marginTop: 8 }}>
-						<label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-							<input
-								type="checkbox"
-								checked={!!(providerSetting as any).enableCors}
-								onChange={e => updateProviderEnableCors(provider, e.target.checked)}
-							/>
-							<span>{t('settings.ApiProvider.enableCors')}</span>
-						</label>
-						<button style={{ marginLeft: 12 }} onClick={handleTestCors}>
-							{t('settings.ApiProvider.testCorsBtn')}
-						</button>
-					</div>
-				)}
 			</div>
 		);
 	};
