@@ -25,11 +25,11 @@ export function ModeSelect() {
 	const getShortcutText = (slug: string) => {
 		switch (slug) {
 			case 'write':
-				return 'Cmd+Shift+.'
+				return 'Ctrl+Shift+.'
 			case 'ask':
-				return 'Cmd+Shift+,'
+				return 'Ctrl+Shift+,'
 			case 'research':
-				return 'Cmd+Shift+/'
+				return 'Ctrl+Shift+/'
 			default:
 				return null
 		}

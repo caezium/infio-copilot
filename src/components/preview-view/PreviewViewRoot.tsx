@@ -14,19 +14,36 @@ export default function PreviewViewRoot({
 	const closeIcon = getIcon('x')
 	const contentRef = useRef<HTMLDivElement>(null)
 
-	// 显示原始文本内容
+	// 显示内容 - 支持 HTML 和纯文本
 	useEffect(() => {
 		if (contentRef.current && state.content) {
 			// 清空现有内容
-			contentRef.current.empty()
+			contentRef.current.innerHTML = ''
 			
-			// 创建预格式化文本元素
-			const preElement = document.createElement('pre')
-			preElement.className = 'infio-raw-content'
-			preElement.textContent = state.content
+			// 判断是否为 HTML 内容（包含 SVG）
+			const isHtmlContent = state.content.trim().startsWith('<') && 
+				(state.content.includes('<svg') || state.content.includes('<div') || 
+				 state.content.includes('<span') || state.content.includes('<pre'))
 			
-			// 添加到容器
-			contentRef.current.appendChild(preElement)
+			if (isHtmlContent) {
+				// 如果是 HTML 内容，直接渲染
+				contentRef.current.innerHTML = state.content
+				
+				// 为 SVG 添加适当的样式
+				const svgElements = contentRef.current.querySelectorAll('svg')
+				svgElements.forEach(svg => {
+					svg.style.maxWidth = '100%'
+					svg.style.height = 'auto'
+					svg.style.display = 'block'
+					svg.style.margin = '0 auto'
+				})
+			} else {
+				// 如果是纯文本，创建预格式化文本元素
+				const preElement = document.createElement('pre')
+				preElement.className = 'infio-raw-content'
+				preElement.textContent = state.content
+				contentRef.current.appendChild(preElement)
+			}
 		}
 	}, [state.content, state.file])
 
@@ -61,7 +78,7 @@ export default function PreviewViewRoot({
 						</div>
 						<div 
 							ref={contentRef} 
-							className="markdown-preview-section"
+							className="markdown-preview-section infio-preview-content"
 						></div>
 					</div>
 				</div>
@@ -92,6 +109,19 @@ export default function PreviewViewRoot({
 					padding: 10px 0;
 				}
 				
+				.infio-preview-content {
+					text-align: center;
+				}
+				
+				.infio-preview-content svg {
+					max-width: 100%;
+					height: auto;
+					display: block;
+					margin: 0 auto;
+					border-radius: var(--radius-s);
+					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				}
+				
 				.infio-raw-content {
 					white-space: pre-wrap;
 					word-break: break-word;
@@ -99,6 +129,7 @@ export default function PreviewViewRoot({
 					padding: 10px;
 					background-color: var(--background-secondary);
 					border-radius: 4px;
+					text-align: left;
 				}
 			`}</style>
 		</div>

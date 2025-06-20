@@ -22,7 +22,14 @@ export function DarkModeProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		const handleDarkMode = () => {
-			setIsDarkMode(document.body.classList.contains('theme-dark'))
+			const newIsDarkMode = document.body.classList.contains('theme-dark')
+			// 只在实际发生变化时才更新状态
+			setIsDarkMode(prevIsDarkMode => {
+				if (prevIsDarkMode !== newIsDarkMode) {
+					return newIsDarkMode
+				}
+				return prevIsDarkMode
+			})
 		}
 		handleDarkMode()
 		app.workspace.on('css-change', handleDarkMode)

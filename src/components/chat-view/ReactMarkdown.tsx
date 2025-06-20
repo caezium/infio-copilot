@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import Markdown from 'react-markdown'
 
 import { ApplyStatus, ToolArgs } from '../../types/apply'
 import {
@@ -11,9 +10,9 @@ import MarkdownApplyDiffBlock from './Markdown/MarkdownApplyDiffBlock'
 import MarkdownEditFileBlock from './Markdown/MarkdownEditFileBlock'
 import MarkdownFetchUrlsContentBlock from './Markdown/MarkdownFetchUrlsContentBlock'
 import MarkdownListFilesBlock from './Markdown/MarkdownListFilesBlock'
+import MarkdownMatchSearchFilesBlock from './Markdown/MarkdownMatchSearchFilesBlock'
 import MarkdownReadFileBlock from './Markdown/MarkdownReadFileBlock'
 import MarkdownReasoningBlock from './Markdown/MarkdownReasoningBlock'
-import MarkdownMatchSearchFilesBlock from './Markdown/MarkdownMatchSearchFilesBlock'
 import MarkdownRegexSearchFilesBlock from './Markdown/MarkdownRegexSearchFilesBlock'
 import MarkdownSearchAndReplace from './Markdown/MarkdownSearchAndReplace'
 import MarkdownSearchWebBlock from './Markdown/MarkdownSearchWebBlock'
@@ -21,6 +20,7 @@ import MarkdownSemanticSearchFilesBlock from './Markdown/MarkdownSemanticSearchF
 import MarkdownSwitchModeBlock from './Markdown/MarkdownSwitchModeBlock'
 import MarkdownToolResult from './Markdown/MarkdownToolResult'
 import MarkdownWithIcons from './Markdown/MarkdownWithIcon'
+import RawMarkdownBlock from './Markdown/RawMarkdownBlock'
 import UseMcpToolBlock from './Markdown/UseMcpToolBlock'
 
 function ReactMarkdown({
@@ -31,8 +31,8 @@ function ReactMarkdown({
 	applyStatus: ApplyStatus
 	onApply: (toolArgs: ToolArgs) => void
 	children: string
-}) {
-
+	}) {
+	
 	const blocks: ParsedMsgBlock[] = useMemo(
 		() => parseMsgBlocks(children),
 		[children],
@@ -42,9 +42,11 @@ function ReactMarkdown({
 		<>
 			{blocks.map((block, index) =>
 				block.type === 'thinking' ? (
-					<Markdown key={"markdown-" + index} className="infio-markdown">
-						{block.content}
-					</Markdown>
+					<RawMarkdownBlock 
+						key={"markdown-" + index} 
+						content={block.content}
+						className="infio-markdown"
+					/>
 				) : block.type === 'think' ? (
 					<MarkdownReasoningBlock
 						key={"reasoning-" + index}
@@ -206,9 +208,11 @@ function ReactMarkdown({
 						content={block.content}
 					/>
 				) : (
-					<Markdown key={"markdown-" + index} className="infio-markdown">
-						{block.content}
-					</Markdown>
+					<RawMarkdownBlock 
+						key={"markdown-" + index} 
+						content={block.content}
+						className="infio-markdown"
+					/>
 				),
 			)}
 		</>

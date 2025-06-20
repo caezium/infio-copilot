@@ -49,25 +49,25 @@ const UserMessageView: React.FC<UserMessageViewProps> = ({
 								<span key={index} className="infio-mention-tag">
 									{Icon && <Icon size={12} />}
 									{mentionable.type === 'current-file' && (
-										<span>{mentionable.file.name}</span>
+										<span>{mentionable.file?.name || 'Not Found'}</span>
 									)}
 									{mentionable.type === 'vault' && (
 										<span>Vault</span>
 									)}
 									{mentionable.type === 'block' && (
-										<span>{mentionable.file.name}</span>
+										<span>{mentionable.file?.name || 'Not Found'}</span>
 									)}
 									{mentionable.type === 'file' && (
-										<span>{mentionable.file.name}</span>
+										<span>{mentionable.file?.name || 'Not Found'}</span>
 									)}
 									{mentionable.type === 'folder' && (
-										<span>{mentionable.folder.name}</span>
+										<span>{mentionable.folder?.name || 'Not Found'}</span>
 									)}
 									{mentionable.type === 'url' && (
 										<span>{mentionable.url}</span>
 									)}
 									{mentionable.type === 'image' && (
-										<span>{mentionable.name}</span>
+										<span>{mentionable.name || 'Image'}</span>
 									)}
 								</span>
 							)

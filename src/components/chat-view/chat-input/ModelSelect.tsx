@@ -1,6 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import Fuse, { FuseResult } from 'fuse.js'
-import { Brain, ChevronDown, ChevronUp, Star } from 'lucide-react'
+import { ChevronDown, ChevronUp, Star } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useSettings } from '../../../contexts/SettingsContext'
@@ -12,28 +12,12 @@ import { GetAllProviders, GetProviderModelIds } from "../../../utils/api"
 const getOptimizedModelName = (modelId: string): string => {
 	if (!modelId) return modelId;
 	
-	// 移除常见的前缀
-	let optimized = modelId
-		.replace(/^(anthropic\/|openai\/|google\/|meta\/|microsoft\/|huggingface\/|mistral\/|cohere\/|ai21\/|together\/|perplexity\/|groq\/|deepseek\/|qwen\/|alibaba\/|baichuan\/|chatglm\/|yi\/|moonshot\/|zhipu\/|minimax\/|sensetime\/|iflytek\/|tencent\/|baidu\/|bytedance\/|netease\/|360\/|xunfei\/|spark\/|ernie\/|wenxin\/|tongyi\/|claude\/|gpt-|llama-|gemini-|palm-|bard-|codex-|davinci-|curie-|babbage-|ada-)/i, '')
-		// 移除版本号和日期
-		.replace(/(-v?\d+(\.\d+)*(-\w+)?|:\d+(\.\d+)*|@\d+(\.\d+)*|-\d{4}-\d{2}-\d{2}|-\d{8}|-latest|-preview|-beta|-alpha|-rc\d*|-instruct|-chat|-base|-turbo|-16k|-32k|-128k)$/i, '')
-		// 移除多余的连字符和下划线
-		.replace(/[-_]+/g, '-')
-		.replace(/^-+|-+$/g, '');
-	
-	// 如果优化后的名称太短或为空，返回原始名称的简化版本
-	if (optimized.length < 3) {
-		// 尝试提取主要部分
-		const parts = modelId.split(/[\/\-_:@]/);
-		optimized = parts.find(part => part.length >= 3) || modelId;
-	}
-	
 	// 限制长度，如果太长则截断并添加省略号
-	if (optimized.length > 25) {
-		optimized = optimized.substring(0, 22) + '...';
+	if (modelId.length > 25) {
+		return modelId.substring(0, 22) + '...';
 	}
 	
-	return optimized;
+	return modelId;
 };
 
 type TextSegment = {
@@ -317,7 +301,7 @@ export function ModelSelect() {
 											>
 												<div className="infio-model-item-text-wrapper">
 													<span className="infio-provider-badge">{collectedModel.provider}</span>
-													<span title={collectedModel.modelId}>{getOptimizedModelName(collectedModel.modelId)}</span>
+													<span title={collectedModel.modelId}>{collectedModel.modelId}</span>
 												</div>
 												<div
 													className="infio-model-item-star"
@@ -491,7 +475,7 @@ export function ModelSelect() {
 														{searchTerm ? (
 															<HighlightedText segments={option.html} />
 														) : (
-															<span title={option.id}>{getOptimizedModelName(option.id)}</span>
+																<span title={option.id}>{option.id}</span>
 														)}
 													</div>
 													<div

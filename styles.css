@@ -204,6 +204,9 @@
     font-size: var(--code-size);
     background-color: var(--code-background);
     vertical-align: baseline;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
   }
 
   table {
@@ -2045,6 +2048,91 @@ button.infio-chat-input-model-select {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+/*
+ * Mermaid Diagram Styles
+ * - Mermaid 图表渲染样式
+ */
+
+.infio-mermaid-loading {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+}
+
+.infio-mermaid-error {
+  padding: 1rem;
+  color: var(--text-error);
+  font-size: var(--font-ui-small);
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-error);
+}
+
+.infio-mermaid-error-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.infio-mermaid-error-message {
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+  margin-bottom: 0.5rem;
+}
+
+.infio-mermaid-error-details {
+  margin-top: 0.5rem;
+}
+
+.infio-mermaid-error-details summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+
+.infio-mermaid-error-details pre {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--background-primary);
+  border-radius: var(--radius-s);
+  font-size: 0.8em;
+  overflow-x: auto;
+}
+
+.infio-mermaid-container {
+  text-align: center;
+  padding: 1rem;
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+  overflow: auto;
+}
+
+/* Mermaid SVG 特定样式 */
+.infio-mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 深色模式下的 Mermaid 样式调整 */
+.theme-dark .infio-mermaid-container .node rect,
+.theme-dark .infio-mermaid-container .node circle,
+.theme-dark .infio-mermaid-container .node ellipse,
+.theme-dark .infio-mermaid-container .node polygon {
+  fill: var(--background-primary);
+  stroke: var(--background-modifier-border);
+}
+
+.theme-dark .infio-mermaid-container .edgePath .path {
+  stroke: var(--text-muted);
+}
+
+.theme-dark .infio-mermaid-container .edgeLabel {
+  background-color: var(--background-primary);
+  color: var(--text-normal);
 }
 
 /*

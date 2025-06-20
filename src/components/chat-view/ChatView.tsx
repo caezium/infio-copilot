@@ -16,7 +16,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 
 import { ApplyViewState } from '../../ApplyView'
-import { APPLY_VIEW_TYPE } from '../../constants'
+import { APPLY_VIEW_TYPE, PREVIEW_VIEW_TYPE } from '../../constants'
 import { useApp } from '../../contexts/AppContext'
 import { useDiffStrategy } from '../../contexts/DiffStrategyContext'
 import { useLLM } from '../../contexts/LLMContext'
@@ -55,6 +55,7 @@ import { openSettingsModalWithError } from '../../utils/open-settings-modal'
 import { PromptGenerator, addLineNumbers } from '../../utils/prompt-generator'
 // Removed empty line above, added one below for group separation
 import { fetchUrlsContent, onEnt, webSearch } from '../../utils/web-search'
+import ErrorBoundary from '../common/ErrorBoundary'
 
 import PromptInputWithActions, { ChatUserInputRef } from './chat-input/PromptInputWithActions'
 import { editorStateToPlainText } from './chat-input/utils/editor-state-to-plain-text'
@@ -873,6 +874,16 @@ const Chat = forwardRef<ChatRef, ChatProps>((props, ref) => {
 	// Updates the currentFile of the focused message (input or chat history)
 	// This happens when active file changes or focused message changes
 	const handleActiveLeafChange = useCallback(() => {
+		// 如果当前活动的是PreviewView或ApplyView，不更新状态以避免不必要的重新渲染
+		// @ts-expect-error Obsidian API type mismatch
+		const activeLeaf = app.workspace.getActiveLeaf()
+		if (activeLeaf?.view && (
+			activeLeaf.view.getViewType() === PREVIEW_VIEW_TYPE ||
+			activeLeaf.view.getViewType() === APPLY_VIEW_TYPE
+		)) {
+			return
+		}
+
 		const activeFile = app.workspace.getActiveFile()
 		if (!activeFile) return
 
@@ -1127,18 +1138,20 @@ const Chat = forwardRef<ChatRef, ChatProps>((props, ref) => {
 											/>
 										</div>
 									) : (
-										<UserMessageView
-											content={message.content}
-											mentionables={message.mentionables}
-											onEdit={() => {
-												setEditingMessageId(message.id)
-												setFocusedMessageId(message.id)
-												// 延迟聚焦，确保组件已渲染
-												setTimeout(() => {
-													chatUserInputRefs.current.get(message.id)?.focus()
-												}, 0)
-											}}
-										/>
+										<ErrorBoundary>
+											<UserMessageView
+												content={message.content}
+												mentionables={message.mentionables}
+												onEdit={() => {
+													setEditingMessageId(message.id)
+													setFocusedMessageId(message.id)
+													// 延迟聚焦，确保组件已渲染
+													setTimeout(() => {
+														chatUserInputRefs.current.get(message.id)?.focus()
+													}, 0)
+												}}
+											/>
+										</ErrorBoundary>
 									)}
 									{message.fileReadResults && (
 										<FileReadResults
