@@ -186,6 +186,7 @@ describe('parseSmartCopilotSettings', () => {
 				baseUrl: '',
 				useCustomUrl: false,
 				models: [],
+				enableCors: false,
 			},
 			openaicompatibleProvider: {
 				name: 'OpenAICompatible',
@@ -193,6 +194,7 @@ describe('parseSmartCopilotSettings', () => {
 				baseUrl: '',
 				useCustomUrl: true,
 				models: [],
+				enableCors: false,
 			},
 			openrouterProvider: {
 				name: 'OpenRouter',
@@ -411,6 +413,7 @@ describe('settings migration', () => {
 				baseUrl: '',
 				useCustomUrl: false,
 				models: [],
+				enableCors: false,
 			},
 			openaicompatibleProvider: {
 				name: 'OpenAICompatible',
@@ -418,6 +421,7 @@ describe('settings migration', () => {
 				baseUrl: '',
 				useCustomUrl: true,
 				models: [],
+				enableCors: false,
 			},
 			openrouterProvider: {
 				name: 'OpenRouter',
